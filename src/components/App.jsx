@@ -1,5 +1,6 @@
 import { Route, Routes } from 'react-router-dom';
 import { lazy, Suspense } from 'react';
+import Notfound from './Notfound/Notfound';
 const Home = lazy(() => import('Pages/Home/Home'));
 const Header = lazy(() => import('./Header/Header'));
 const Movies = lazy(() => import('Pages/Movie/Movie'));
@@ -18,6 +19,7 @@ export const App = () => {
             <Route path="cast" element={<Cast />} />
             <Route path="reviews" element={<Reviews />} />
           </Route>
+          <Route path="*" element={<Notfound />} />
         </Routes>
       </Suspense>
     </>
