@@ -1,4 +1,13 @@
 @import-normalize; /* bring in normalize.css styles */
+li {
+  color: black;
+
+  list-style: none;
+}
+p {
+  font-size: 20px;
+  font-weight: 600;
+}
 
 body {
   margin: 0;

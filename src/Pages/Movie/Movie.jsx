@@ -1,38 +1,53 @@
-import { getMovies } from '../../helpers/helpers.js';
+import { SearchForm } from 'components/SerchForm/SerchForm';
+import { getMovieSearchName } from 'helpers/Api';
 import { useEffect, useState } from 'react';
+import { Link, useLocation, useSearchParams } from 'react-router-dom';
+import css from './Movies.module.css';
 
-export const Movies = () => {
+const Movies = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  let query = searchParams.get('query') || '';
   const [movie, setMovie] = useState(null);
+  const location = useLocation();
 
   useEffect(() => {
+    if (!query) return;
     const getData = async () => {
-      const data = await getMovies();
-      setMovie(data);
-      console.log(data);
+      const data = await getMovieSearchName({ query });
+      setMovie(data.results);
     };
-
     getData();
-  }, []);
+  }, [query]);
+
+  const getFormData = data => {
+    setSearchParams({ query: data });
+  };
+
+  const getFilmOnClick = e => {
+    console.log(e.target.id);
+    setMovie(e.target.id);
+  };
 
   return (
     <>
-      {movie.map(item => (
-        <div key={item.id}>
-          Movie
-          <h1>Title</h1>
-          <img src="" alt="" />
-          <p>User score:</p>
-          <h2>Overview</h2>
-          <p></p>
-          <h2>Genres</h2>
-          <p></p>
-          <p>Additional information</p>
-          <ul>
-            <li>Cast</li>
-            <li>Reviews</li>
-          </ul>
-        </div>
-      ))}
+      <SearchForm getFormData={getFormData} />
+      {movie && (
+        <ul>
+          {movie?.map(item => (
+            <li key={item.id} onClick={getFilmOnClick}>
+              <Link
+                state={{ from: location }}
+                to={`${item.id}`}
+                id={item.id}
+                className={css.movieLink}
+              >
+                {item.original_title}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      )}
     </>
   );
 };
+export default Movies;
